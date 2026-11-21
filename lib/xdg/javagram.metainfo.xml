@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+    <id>org.javagram.desktop</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0</project_license>
+    <name>JavaGram</name>
+    <summary>New era of messaging</summary>
+    <description>
+        <p>JavaGram is a Telegram Desktop fork that lets you sign in to more than one server from a single application.</p>
+        <p>Choose a server when you add an account: the official Telegram network, or any self-hosted MTProto backend you point the client at. Each account keeps its own server binding, its own session identity and its own local state.</p>
+        <p>JavaGram is a fork of Telegram Desktop and is not affiliated with Telegram FZ-LLC. Telegram itself remains a separate project with its own clients and its own releases.</p>
+    </description>
+    <categories>
+        <category>Network</category>
+        <category>InstantMessaging</category>
+    </categories>
+    <developer id="org.javagram"><name>JavaGram</name></developer>
+    <url type="homepage">https://jg.cc</url>
+    <url type="bugtracker">https://jg.cc/issues</url>
+    <url type="vcs-browser">https://jg.cc</url>
+    <url type="contribute">https://jg.cc/blob/dev/.github/CONTRIBUTING.md</url>
+    <branding>
+        <color type="primary" scheme_preference="light">#9B51E0</color>
+        <color type="primary" scheme_preference="dark">#9B51E0</color>
+    </branding>
+    <keywords>
+        <keyword>telegram</keyword>
+        <keyword>javagram</keyword>
+        <keyword>tdesktop</keyword>
+        <keyword>messaging</keyword>
+        <keyword>messenger</keyword>
+        <keyword>chat</keyword>
+        <keyword>im</keyword>
+    </keywords>
+    <requires>
+        <!-- windowMinHeight from Telegram/SourceFiles/window/window.style -->
+        <display_length compare="ge">480</display_length>
+        <internet>always</internet>
+        <!-- on-screen keyboards are too big for current minimal display height -->
+        <control>keyboard</control>
+    </requires>
+    <supports>
+        <control>pointing</control>
+        <control>touch</control>
+    </supports>
+    <content_rating type="oars-1.1">
+        <content_attribute id="violence-cartoon">none</content_attribute>
+        <content_attribute id="violence-fantasy">none</content_attribute>
+        <content_attribute id="violence-realistic">none</content_attribute>
+        <content_attribute id="violence-bloodshed">none</content_attribute>
+        <content_attribute id="violence-sexual">none</content_attribute>
+        <content_attribute id="violence-desecration">none</content_attribute>
+        <content_attribute id="violence-slavery">none</content_attribute>
+        <content_attribute id="violence-worship">none</content_attribute>
+        <content_attribute id="drugs-alcohol">none</content_attribute>
+        <content_attribute id="drugs-narcotics">none</content_attribute>
+        <content_attribute id="drugs-tobacco">none</content_attribute>
+        <content_attribute id="sex-nudity">none</content_attribute>
+        <content_attribute id="sex-themes">none</content_attribute>
+        <content_attribute id="sex-homosexuality">none</content_attribute>
+        <content_attribute id="sex-prostitution">none</content_attribute>
+        <content_attribute id="sex-adultery">none</content_attribute>
+        <content_attribute id="sex-appearance">none</content_attribute>
+        <content_attribute id="language-profanity">none</content_attribute>
+        <content_attribute id="language-humor">none</content_attribute>
+        <content_attribute id="language-discrimination">none</content_attribute>
+        <content_attribute id="social-chat">intense</content_attribute>
+        <content_attribute id="social-info">none</content_attribute>
+        <content_attribute id="social-audio">intense</content_attribute>
+        <content_attribute id="social-location">none</content_attribute>
+        <content_attribute id="social-contacts">intense</content_attribute>
+        <content_attribute id="money-purchasing">intense</content_attribute>
+        <content_attribute id="money-gambling">none</content_attribute>
+        <content_attribute id="money-advertising">moderate</content_attribute>
+    </content_rating>
+    <launchable type="desktop-id">org.javagram.desktop.desktop</launchable>
+    <provides>
+        <binary>JavaGram</binary>
+        <dbus type="session">org.javagram.desktop</dbus>
+        <mediatype>x-scheme-handler/tg</mediatype>
+        <mediatype>x-scheme-handler/tonsite</mediatype>
+        <mediatype>x-scheme-handler/ton</mediatype>
+        <mediatype>x-scheme-handler/srv</mediatype>
+    </provides>
+</component>

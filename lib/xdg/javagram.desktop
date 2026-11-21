@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=JavaGram Desktop
+Comment=New era of messaging
+TryExec=JavaGram
+Exec=JavaGram -- %U
+Icon=org.javagram.desktop
+Terminal=false
+StartupWMClass=JavaGramDesktop
+Type=Application
+Categories=Chat;Network;InstantMessaging;Qt;
+MimeType=x-scheme-handler/tg;x-scheme-handler/tonsite;x-scheme-handler/ton;x-scheme-handler/srv;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;javagram;
+Actions=quit;
+DBusActivatable=true
+SingleMainWindow=true
+X-GNOME-UsesNotifications=true
+X-GNOME-SingleWindow=true
+
+[Desktop Action quit]
+Exec=JavaGram -quit
+Name=Quit JavaGram
+Icon=application-exit
