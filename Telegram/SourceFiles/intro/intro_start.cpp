@@ -33,7 +33,10 @@ StartWidget::StartWidget(
 
 void StartWidget::submit() {
 	account().destroyStaleAuthorizationKeys();
-	goNext<ServerSelectWidget>();
+	if (account().serverId().isEmpty()) {
+		account().applyServer(u"javagram"_q, u"144.31.222.92"_q, 2398);
+	}
+	goNext<QrWidget>();
 }
 
 rpl::producer<QString> StartWidget::nextButtonText() const {

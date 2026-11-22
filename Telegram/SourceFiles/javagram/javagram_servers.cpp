@@ -66,6 +66,21 @@ constexpr auto kCheckTimeout = 5000;
 
 [[nodiscard]] std::vector<Server> MergeServers();
 
+
+[[nodiscard]] Server JavaGramServer() {
+	return Server{
+		.id = u"javagram"_q,
+		.name = u"JavaGram"_q,
+		.host = u"144.31.222.92"_q,
+		.port = 2398,
+		.description = u"JavaGram"_q,
+		.rsaPublicKey = u"-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAxF//0M0+/5PzgdNagTX+J+dJgr75ZCTuiG8i4x7YwmJF+jiOGCjm\n7X7BLCaMc1+hOZYDL3+Gvle/AKykW1qouaCJMVx/H+2l8LFXLelZ2PLawTb8A7Bl\nTqWzL3db5BugMNWziL9TuhR8In1bwKY07QVpR9in5zjAsAGLBk+mGt0DnVyMf1Xo\np2lLCFNmm0F4ykcAeaLCCIPbGWddliLY8xEEhI4GO2l1U3kZMwIOdOnAGJFtgUAo\nTe+FHR6F1s9adCVZB1teL/hf9R+WmekJwygVz0MYEH7y6U49T45+/W7OF6X6g0W0\nj1uSSrsY4qN7twxbTad9zdGZ7ys+9v+PuQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+		.logoPath = u":/gui/art/logo_256.png"_q,
+		.multiDc = false,
+		.mainDcId = 2,
+	};
+}
+
 [[nodiscard]] Server TelegramServer() {
 	return Server{
 		.id = u"telegram"_q,
@@ -309,6 +324,7 @@ void EnsureServerLogos() {
 			result.push_back(server);
 		}
 	};
+	append(JavaGramServer());
 	append(TelegramServer());
 	const auto &state = StateInstance();
 	for (const auto &server : state.remote) {

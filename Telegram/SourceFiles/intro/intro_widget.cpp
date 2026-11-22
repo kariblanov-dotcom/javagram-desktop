@@ -123,7 +123,10 @@ Widget::Widget(
 		appendStep(new StartWidget(this, _account, getData()));
 		break;
 	case EnterPoint::ServerSelect:
-		appendStep(new ServerSelectWidget(this, _account, getData()));
+		if (_account->serverId().isEmpty()) {
+			_account->applyServer(u"javagram"_q, u"144.31.222.92"_q, 2398);
+		}
+		appendStep(new QrWidget(this, _account, getData()));
 		break;
 	default: Unexpected("Enter point in Intro::Widget::Widget.");
 	}
