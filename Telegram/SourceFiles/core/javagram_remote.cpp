@@ -16,7 +16,7 @@ QString RemoteDomain() {
 }
 
 QString ServersUrl() {
-	return QString();
+	return RemoteDomain() + u"/servers.json"_q;
 }
 
 QString UpdateManifestUrl() {
