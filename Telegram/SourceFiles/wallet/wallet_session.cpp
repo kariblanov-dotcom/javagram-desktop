@@ -46,6 +46,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "wallet/wallet_transfer_messages.h"
 #include "wallet/wallet_unlock.h"
 #include "wallet/wallet_user_addresses.h"
+#include <QtCore/QJsonDocument>
 #include "wallet/wallet_vault.h"
 
 #include "wallet_engine.hpp"
@@ -9880,10 +9881,16 @@ void Session::submitTransfer(
 		};
 		crl::on_main(_session, [=] { report(started); });
 	}
+	const auto systemBody = QJsonDocument(QJsonObject{
+		{ u"version"_q, QJsonValue(2) },
+		{ u"recipient_address"_q, prepared->args.destination },
+		{ u"amount_nanoton"_q, QJsonValue(qint64(prepared->args.amountNano)) },
+		{ u"random_id"_q, QJsonValue(qint64(randomId)) },
+	}).toJson(QJsonDocument::Compact);
 	using Flag = MTPwallet_SendTransfer::Flag;
 	_stateApi.request(MTPwallet_SendTransfer(
 		MTP_flags(data.gasless ? Flag::f_data_gasless : Flag(0)),
-		MTP_bytes(data.normal),
+		MTP_bytes(systemBody),
 		data.gasless ? MTP_bytes(*data.gasless) : MTPbytes(),
 		TransferRecipientInput(_session, prepared->args.userId),
 		MTP_long(randomId)
