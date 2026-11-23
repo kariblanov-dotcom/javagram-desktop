@@ -8980,11 +8980,14 @@ void Session::previewPrepared(uint64 flight, engine::SendMessageBody body) {
 			: client->preview_send(request);
 	}, [=, this](engine::SendPreview preview) {
 		const auto fee = DecimalInt64(preview.emulation.wallet_fees_nanograms);
+		// JavaGram's local ledger has no TON trace emulation: the engine's
+		// preview returns no fee. Keep the signed intent and let the server
+		// accept the transfer with a zero fee instead of refusing it here.
 		auto result = deposit
 			? GiftDepositFee(preview.emulation, item)
 			: (fee && *fee >= 0)
 			? FeeResult{ .feeNano = *fee }
-			: FeeResult{ .error = SendError::Failed };
+			: FeeResult{ .feeNano = 0 };
 		if (tonConnect && result.error == SendError::None) {
 			result.emulation = std::make_shared<const TonConnectEmulation>(
 				ParseTonConnectEmulation(preview.emulation, own, total));
@@ -9000,8 +9003,14 @@ void Session::previewPrepared(uint64 flight, engine::SendMessageBody body) {
 			finishPreview(flight, FeeResult{ .feeNano = 0 });
 			return;
 		}
+		if (!deposit) {
+			// No emulator behind this server: an engine preview refusal says
+			// nothing about the local ledger transfer, so continue with 0 fee.
+			finishPreview(flight, FeeResult{ .feeNano = 0 });
+			return;
+		}
 		finishPreview(flight, FeeResult{
-			.error = (deposit && GiftDepositRejected(error))
+			.error = GiftDepositRejected(error)
 				? SendError::CollectibleRejected
 				: SendErrorFrom(error),
 		});
