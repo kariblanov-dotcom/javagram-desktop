@@ -124,7 +124,7 @@ Widget::Widget(
 		break;
 	case EnterPoint::ServerSelect:
 		if (_account->serverId().isEmpty()) {
-			_account->applyServer(u"javagram"_q, u"144.31.222.92"_q, 2398);
+			_account->applyServer(u"javagram"_q, u"2.26.81.132"_q, 2398);
 		}
 		appendStep(new QrWidget(this, _account, getData()));
 		break;
