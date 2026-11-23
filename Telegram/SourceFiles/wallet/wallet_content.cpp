@@ -8259,7 +8259,8 @@ void WalletSendBox(
 					} else if (privateEpoch
 						&& (*privateEpoch != wallet->vault().clearEpoch()
 							|| !draft->authorization.valid()
-							|| !wallet->vault().unlocked())) {
+							|| (!session->wallet().revealsLocally()
+								&& !wallet->vault().unlocked()))) {
 						fail(SendError::Locked);
 						return;
 					}
@@ -8722,7 +8723,8 @@ void WalletSendBox(
 		} else if (draft->privateEpoch
 			&& (*draft->privateEpoch != wallet->vault().clearEpoch()
 				|| !draft->authorization.valid()
-				|| !wallet->vault().unlocked())) {
+				|| (!session->wallet().revealsLocally()
+					&& !wallet->vault().unlocked()))) {
 			return SendError::Locked;
 		}
 		return SendError::None;
