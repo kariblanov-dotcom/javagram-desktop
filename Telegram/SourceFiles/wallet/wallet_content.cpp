@@ -11026,13 +11026,9 @@ void RunKeyRequiringAction(
 				context);
 		}
 	} else if (state.mode == DeviceMode::ReadOnlyNotRestorable) {
-		show->showBox(Box(
-			WalletImportBox,
-			show,
-			WalletImportMode::Restore,
-			(kind == KeyActionKind::ResumeAfterRestore) ? action : nullptr,
-			context,
-			std::move(importAbout)));
+		// Server-side wallet: the private key and balance live on telesrv, so no
+		// local 12-word phrase is needed. Run the action without the restore box.
+		action();
 	} else {
 		ResolveDeviceCustody(show, [=] {
 			RunKeyRequiringAction(
