@@ -9386,7 +9386,8 @@ void Session::startSend(
 			LOG(("Wallet Error: wallet.sendTransfer failed: %1"
 				).arg(error.type()));
 			if (done) {
-				done(SendErrorFrom(error));
+				const auto refusal = DefiniteTransferRefusal(error);
+				done(refusal ? *refusal : SendError::Failed);
 			}
 		}).handleAllErrors().send();
 		return;
