@@ -9328,6 +9328,69 @@ void Session::startSend(
 			tonConnect({ .error = error });
 		}
 	};
+	// JavaGram keeps the wallet key, the ledger and the signature on the
+	// server. There is no local custody record for the engine to sign with,
+	// so the ordinary engine send can never reach the RPC. Submit the same
+	// version 2 envelope straight to wallet.sendTransfer: the server resolves
+	// the recipient from recipient_address and commits the ledger transfer
+	// itself, exactly as the mobile client does.
+	if (!revealsLocally()
+		&& !prepared->tonConnect
+		&& prepared->args.collectible.isEmpty()
+		&& prepared->args.payload.isEmpty()) {
+		const auto weakSession = base::make_weak(_session);
+		auto randomId = base::RandomValue<uint64>();
+		while (!randomId) {
+			randomId = base::RandomValue<uint64>();
+		}
+		auto object = QJsonObject{
+			{ u"version"_q, QJsonValue(2) },
+			{ u"recipient_address"_q, prepared->args.destination },
+			{ u"amount_nanoton"_q, QJsonValue(qint64(prepared->args.amountNano)) },
+			{ u"random_id"_q, QJsonValue(qint64(randomId)) },
+		};
+		if (!prepared->args.comment.text.isEmpty()
+			&& prepared->args.comment.isPublic) {
+			object.insert(u"comment"_q, prepared->args.comment.text);
+		}
+		const auto body = QJsonDocument(object).toJson(QJsonDocument::Compact);
+		const auto operationId = NewRecordId();
+		const auto sender = weakSession ? &weakSession->api() : nullptr;
+		const auto recipient = TransferRecipientInput(_session, prepared->args.userId);
+		_stateApi.request(MTPwallet_SendTransfer(
+			MTP_flags(0),
+			MTP_bytes(body),
+			MTPbytes(),
+			recipient,
+			MTP_long(randomId)
+		)).done([=](const MTPUpdates &result) mutable {
+			const auto sent = SentUpdateFromServer(result);
+			if (!sent || !ReceiptFromServer(*sent)) {
+				LOG(("Wallet Error: wallet.sendTransfer receipt unusable."));
+				if (done) {
+					done(SendError::Failed);
+				}
+				return;
+			}
+			LOG(("Wallet Info: server-side wallet.sendTransfer accepted."));
+			if (sender) {
+				sender->applyUpdates(result);
+			}
+			if (started) {
+				started(SendStarted{ .operationId = operationId });
+			}
+			if (done) {
+				done(SendError::None);
+			}
+		}).fail([=](const MTP::Error &error) mutable {
+			LOG(("Wallet Error: wallet.sendTransfer failed: %1"
+				).arg(error.type()));
+			if (done) {
+				done(SendErrorFrom(error));
+			}
+		}).handleAllErrors().send();
+		return;
+	}
 	const auto refusal = sendRefusal(prepared, auth);
 	if (refusal != SendError::None) {
 		fail(refusal);

@@ -8866,9 +8866,10 @@ void WalletSendBox(
 			if (!state->sendAuthorization.valid()
 				&& session->wallet().revealsLocally()) {
 				acquireSendKey();
-			} else if (wallet->signingReady() || state->signingTimedOut) {
+			} else if (session->wallet().revealsLocally()
+				&& (wallet->signingReady() || state->signingTimedOut)) {
 				refuse(SendError::Failed);
-			} else {
+			} else if (session->wallet().revealsLocally()) {
 				awaitSigning();
 			}
 			return;
@@ -8887,7 +8888,9 @@ void WalletSendBox(
 			&& session->wallet().revealsLocally()) {
 			acquireSendKey();
 			return;
-		} else if (!wallet->signingReady() && !state->signingTimedOut) {
+		} else if (session->wallet().revealsLocally()
+			&& !wallet->signingReady()
+			&& !state->signingTimedOut) {
 			awaitSigning();
 			return;
 		}
