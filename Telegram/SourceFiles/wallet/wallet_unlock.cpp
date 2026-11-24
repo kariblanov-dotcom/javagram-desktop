@@ -487,6 +487,15 @@ bool KeyAuthorization::valid() const {
 void AcquireVaultUnlock(VaultUnlockArgs args) {
 	Expects(args.show != nullptr);
 
+	// Gram/JavaGram server-side wallet: the private key and balance live on
+	// telesrv, so no local vault prompt is ever needed.
+	if (!args.show->session().wallet().revealsLocally()) {
+		if (args.done) {
+			args.done({});
+		}
+		return;
+	}
+
 	using State = KeyringReading::State;
 	const auto show = args.show;
 	const auto mayInstall = args.mayInstall;

@@ -8863,7 +8863,8 @@ void WalletSendBox(
 			// right after it was, and the readiness change resumes the
 			// press. A ready signing client that still refuses, or a swap
 			// that outlasts the bound, is stated as a failure.
-			if (!state->sendAuthorization.valid()) {
+			if (!state->sendAuthorization.valid()
+				&& session->wallet().revealsLocally()) {
 				acquireSendKey();
 			} else if (wallet->signingReady() || state->signingTimedOut) {
 				refuse(SendError::Failed);
@@ -8872,7 +8873,8 @@ void WalletSendBox(
 			}
 			return;
 		} else if (error == SendError::QuoteExpired) {
-			if (isPrivate && !state->sendAuthorization.valid()) {
+			if (isPrivate && !state->sendAuthorization.valid()
+				&& session->wallet().revealsLocally()) {
 				acquireSendKey();
 			} else {
 				prepareFee(state->sendAuthorization);
@@ -8881,7 +8883,8 @@ void WalletSendBox(
 		} else if (error != SendError::None) {
 			refuse(error);
 			return;
-		} else if (!state->sendAuthorization.valid()) {
+		} else if (!state->sendAuthorization.valid()
+			&& session->wallet().revealsLocally()) {
 			acquireSendKey();
 			return;
 		} else if (!wallet->signingReady() && !state->signingTimedOut) {
@@ -10989,6 +10992,10 @@ void RunKeyRequiringAction(
 		rpl::producer<QString> importAbout) {
 	if (context && !context->valid()) {
 		context->cancel();
+		return;
+	}
+	if (!show->session().wallet().revealsLocally()) {
+		action();
 		return;
 	}
 	const auto state = show->session().wallet().deviceCustodyState();

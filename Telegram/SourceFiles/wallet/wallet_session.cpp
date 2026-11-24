@@ -857,6 +857,9 @@ struct ThrowawayRotation {
 [[nodiscard]] bool ReadAuthorized(
 		Session &session,
 		const KeyAuthorization &auth) {
+	if (!session.revealsLocally()) {
+		return true;
+	}
 	return auth.grant
 		&& auth.grant->valid()
 		&& session.vault().unlocked();
