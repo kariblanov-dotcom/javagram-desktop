@@ -113,13 +113,11 @@ DcKeyBindState DcKeyBinder::handleResponse(const mtpBuffer &response) {
 	if (response[0] == mtpc_boolTrue) {
 		return DcKeyBindState::Success;
 	} else if (response[0] == mtpc_rpc_error && error.read(from, end)) {
-		const auto destroyed = error.match([&](const MTPDrpc_error &data) {
-			return (data.verror_code().v == 400)
-				&& (data.verror_message().v == "ENCRYPTED_MESSAGE_INVALID");
-		});
-		return destroyed
-			? DcKeyBindState::DefinitelyDestroyed
-			: DcKeyBindState::Failed;
+		// JavaGram server can answer ENCRYPTED_MESSAGE_INVALID for an expired
+		// or replayed PFS binding. Treating that as proof that the permanent
+		// key was destroyed logs the account out on every PC restart, so keep
+		// the permanent key and just retry the binding.
+		return DcKeyBindState::Failed;
 	} else {
 		return DcKeyBindState::Failed;
 	}

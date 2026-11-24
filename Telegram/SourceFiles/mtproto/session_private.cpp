@@ -2549,6 +2549,10 @@ bool SessionPrivate::noMediaKeyWithExistingRegularKey() const {
 }
 
 bool SessionPrivate::destroyOldEnoughPersistentKey() {
+	// JavaGram keeps sessions across PC restarts: never rotate away the
+	// permanent auth key because a PFS binding failed.
+	return false;
+
 	Expects(_keyCreator != nullptr);
 
 	const auto key = _keyCreator->bindPersistentKey();
