@@ -9347,9 +9347,12 @@ void Session::startSend(
 		// prepared destination is canonical raw (0:..). Convert before sending,
 		// otherwise LinksByAddresses resolves nothing and the RPC answers
 		// USER_ID_INVALID.
+		// Wallet links on the server are stored in the bounceable friendly
+		// form (EQ..). User transfers set bounce=false for message delivery,
+		// but that would serialize as UQ.. and miss the lookup again.
 		const auto recipientAddress = FormatFriendly(
 			prepared->args.destination,
-			prepared->args.bounce);
+			true);
 		LOG(("Wallet Info: server send destination raw=%1 friendly=%2"
 			).arg(prepared->args.destination, recipientAddress));
 		auto object = QJsonObject{
