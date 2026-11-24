@@ -9343,9 +9343,18 @@ void Session::startSend(
 		while (!randomId) {
 			randomId = base::RandomValue<uint64>();
 		}
+		// The server links wallet addresses in friendly (EQ..) form, while the
+		// prepared destination is canonical raw (0:..). Convert before sending,
+		// otherwise LinksByAddresses resolves nothing and the RPC answers
+		// USER_ID_INVALID.
+		const auto recipientAddress = FormatFriendly(
+			prepared->args.destination,
+			prepared->args.bounce);
+		LOG(("Wallet Info: server send destination raw=%1 friendly=%2"
+			).arg(prepared->args.destination, recipientAddress));
 		auto object = QJsonObject{
 			{ u"version"_q, QJsonValue(2) },
-			{ u"recipient_address"_q, prepared->args.destination },
+			{ u"recipient_address"_q, recipientAddress },
 			{ u"amount_nanoton"_q, QJsonValue(qint64(prepared->args.amountNano)) },
 			{ u"random_id"_q, QJsonValue(qint64(randomId)) },
 		};
