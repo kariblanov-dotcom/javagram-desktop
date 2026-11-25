@@ -43,6 +43,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/data_star_gift.h"
 #include "data/data_stories.h"
 #include "data/data_user.h"
+#include "data/data_user_wallet_card.h"
 #include "data/stickers/data_custom_emoji.h"
 #include "editor/photo_editor_common.h"
 #include "editor/photo_editor_layer_widget.h"
