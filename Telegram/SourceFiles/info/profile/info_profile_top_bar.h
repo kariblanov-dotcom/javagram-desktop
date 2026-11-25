@@ -16,8 +16,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/rp_widget.h"
 #include "ui/userpic_view.h"
 
-class QMouseEvent;
-
 namespace Data {
 class ForumTopic;
 class DocumentMedia;
@@ -159,9 +157,6 @@ public:
 protected:
 	void resizeEvent(QResizeEvent *e) override;
 	void paintEvent(QPaintEvent *e) override;
-	void mousePressEvent(QMouseEvent *e) override;
-	void mouseMoveEvent(QMouseEvent *e) override;
-	void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
 	[[nodiscard]] bool clipTouchesRoundedCorners(const QRect &clip) const;
@@ -206,7 +201,6 @@ private:
 	void hideBadgeTooltip();
 	void setupNftBubble();
 	void paintNftBubble(QPainter &p, const QRect &geometry);
-	[[nodiscard]] QRectF nftBubbleRect(const QRect &geometry) const;
 	void setupAnimatedPattern(const QRect &userpicGeometry = QRect());
 	void paintAnimatedPattern(
 		QPainter &p,
@@ -351,10 +345,6 @@ private:
 
 	std::unique_ptr<Wallet::CardStickers> _nftStickers;
 	std::vector<QString> _nftAddresses;
-	base::Timer _nftTimer;
-	float64 _nftPhase = 0.;
-	bool _nftDragging = false;
-	float64 _nftLastAngle = 0.;
 
 	base::unique_qptr<Ui::AbstractButton> _userpicButton;
 
