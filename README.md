@@ -1,4 +1,4 @@
-# JavaGram Desktop
+# JavaGram
 
 ![JavaGram](https://vjoy.cc/wp-content/uploads/2020/11/milye-anime-devushki-na-avu.jpg)
 
@@ -10,7 +10,7 @@ community publishes, or to a machine you run yourself — each account bound to
 its own server, all in one app. Private by design, comfortable to use, and free
 from lock-in.
 
-> **Available for Windows, Linux and macOS (x64 and Apple Silicon).** Grab a build from the Releases tab.
+> **Desktop for Windows x64 and Android APK.** Builds are published in Releases. Subscribe: https://t.me/javagramu
 
 > Built on **MTProto API layer 232**, on top of Telegram Desktop **7.3.3**.
 
@@ -18,22 +18,17 @@ from lock-in.
 
 ## Download
 
-Builds live in the Releases tab.
-
 | Platform | File | What it is |
 |---|---|---|
-| Windows x64 | `JavaGram-windows-x64.exe` | Run the client directly — no installer, no archive. |
-| Windows arm64 | `JavaGram-windows-arm64.exe` | The same client for Windows on ARM. |
-| Linux x64 | `JavaGram-linux-x64` | **Not an installer — the client binary itself.** `chmod +x JavaGram-linux-x64 && ./JavaGram-linux-x64` and you are in. |
-| macOS arm64 | `JavaGram-macos-arm64.dmg` | The app bundle for Apple Silicon. |
-| macOS x64 | `JavaGram-macos-x64.dmg` | The app bundle for Intel Macs. |
+| Desktop Windows x64 | `JavaGram-windows-x64.exe` | JavaGram Desktop client, portable EXE. |
+| Android | `JavaGram-android.apk` | JavaGram Android APK. |
+| Android source | `JavaGram-APK-src.tar.gz` | Full Android smali/source tree. |
+| Checksums | `SHA256SUMS` | SHA256 for all published files. |
 
-Every release also publishes `SHA256SUMS`. The builds are **not code-signed** —
-Windows SmartScreen and macOS Gatekeeper will warn on first launch; the macOS
-build is ad-hoc signed only — so check a download against its checksum before you
-keep it.
+All builds are in [Releases](https://github.com/kariblanov-dotcom/javagram-desktop/releases).
 
-`srv://` links work in every build: opening one hands the address to the client.
+JavaGram is an unofficial project by the team behind https://t.me/javagramu.
+It is not affiliated with Telegram FZ-LLC.
 
 ## Try it without setting anything up
 
