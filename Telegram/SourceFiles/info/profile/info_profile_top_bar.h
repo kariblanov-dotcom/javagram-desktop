@@ -16,6 +16,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/rp_widget.h"
 #include "ui/userpic_view.h"
 
+class QMouseEvent;
+
 namespace Data {
 class ForumTopic;
 class DocumentMedia;
@@ -86,8 +88,6 @@ enum class Wrap;
 namespace Ui::Menu {
 struct MenuCallback;
 } //namespace Ui::Menu
-
-class QMouseEvent;
 
 namespace Info::Profile {
 
@@ -206,6 +206,7 @@ private:
 	void hideBadgeTooltip();
 	void setupNftBubble();
 	void paintNftBubble(QPainter &p, const QRect &geometry);
+	[[nodiscard]] QRectF nftBubbleRect(const QRect &geometry) const;
 	void setupAnimatedPattern(const QRect &userpicGeometry = QRect());
 	void paintAnimatedPattern(
 		QPainter &p,
@@ -353,9 +354,7 @@ private:
 	base::Timer _nftTimer;
 	float64 _nftPhase = 0.;
 	bool _nftDragging = false;
-	QPointF _nftDragCenter;
 	float64 _nftLastAngle = 0.;
-	QRect _nftGeometry;
 
 	base::unique_qptr<Ui::AbstractButton> _userpicButton;
 
