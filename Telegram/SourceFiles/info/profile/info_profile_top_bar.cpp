@@ -3335,14 +3335,14 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 	probe.end();
 
 	const auto count = std::min<size_t>(_nftAddresses.size(), 10);
-	const auto side = std::max(10, int(geometry.width() * 0.19));
+	const auto side = std::max(10, int(geometry.width() * 0.22));
 	const auto pixelSide = side * style::DevicePixelRatio();
 	const auto center = rect::center(geometry);
+	const auto orbit = geometry.width() * 0.62;
+	const auto bubbleSide = side * 1.14;
 	auto hq = PainterHighQualityEnabler(p);
 	p.save();
-	auto clip = QPainterPath();
-	clip.addEllipse(QRectF(geometry).adjusted(2., 2., -2., -2.));
-	p.setClipPath(clip);
+	p.setRenderHint(QPainter::Antialiasing);
 	for (size_t i = 0; i < count; ++i) {
 		auto image = _nftStickers->image(_nftAddresses[i]);
 		if (image.isNull()) {
@@ -3355,13 +3355,19 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 		image.setDevicePixelRatio(style::DevicePixelRatio());
 		const auto angle = _nftPhase * (0.65 + (i % 3) * 0.11)
 			+ (M_PI * 2. * i / count);
-		const auto radius = geometry.width()
-			* (0.14 + (i % 2) * 0.07)
-			+ std::sin(_nftPhase * 1.7 + i) * geometry.width() * 0.025;
+		const auto radius = orbit
+			+ std::sin(_nftPhase * 1.7 + i) * geometry.width() * 0.02;
 		const auto pos = QPointF(
 			center.x() + std::cos(angle) * radius - side / 2.,
 			center.y() + std::sin(angle) * radius - side / 2.);
-		p.setOpacity(0.88);
+		p.setPen(Qt::NoPen);
+		p.setBrush(QColor(255, 255, 255, 48));
+		p.drawEllipse(QRectF(
+			pos.x() + side / 2. - bubbleSide / 2.,
+			pos.y() + side / 2. - bubbleSide / 2.,
+			bubbleSide,
+			bubbleSide));
+		p.setOpacity(0.92);
 		p.drawImage(QRectF(pos, QSizeF(side, side)), image);
 	}
 	p.setOpacity(1.);
