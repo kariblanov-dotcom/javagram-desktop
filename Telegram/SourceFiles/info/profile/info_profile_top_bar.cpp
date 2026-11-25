@@ -15,6 +15,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "base/timer_rpl.h"
 #include "base/timer.h"
 #include "base/unixtime.h"
+#include <cmath>
+#include <QMouseEvent>
 #include "boxes/peers/edit_peer_info_box.h" // EditPeerInfoBox::Available.
 #include "boxes/peers/edit_forum_topic_box.h"
 #include "boxes/peers/manage_community_box.h"
@@ -3307,7 +3309,7 @@ void TopBar::setupNftBubble() {
 		});
 	_nftTimer.setCallback([weak = base::make_weak(this)] {
 		if (const auto strong = weak.get()) {
-			if (!strong->_gifPausedChecker()) {
+			if (!strong->_gifPausedChecker() && !strong->_nftDragging) {
 				strong->_nftPhase += 0.04;
 			}
 			strong->update();
@@ -3320,6 +3322,7 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 	if (!_nftStickers || _nftAddresses.empty() || geometry.width() < 48) {
 		return;
 	}
+	_nftGeometry = geometry;
 
 	// Force card collectible artwork to load and decode. The card fold is
 	// transparent: we only need its sticker images for the profile bubble.
@@ -3335,11 +3338,12 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 	probe.end();
 
 	const auto count = std::min<size_t>(_nftAddresses.size(), 10);
-	const auto side = std::max(10, int(geometry.width() * 0.22));
+	const auto side = std::max(10, int(geometry.width() * 0.26));
 	const auto pixelSide = side * style::DevicePixelRatio();
 	const auto center = rect::center(geometry);
-	const auto orbit = geometry.width() * 0.62;
-	const auto bubbleSide = side * 1.14;
+	const auto orbit = geometry.width() * 0.68;
+	const auto halo = side * 1.9;
+	const auto bubble = side * 1.5;
 	auto hq = PainterHighQualityEnabler(p);
 	p.save();
 	p.setRenderHint(QPainter::Antialiasing);
@@ -3353,25 +3357,73 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 			Qt::KeepAspectRatio,
 			Qt::SmoothTransformation);
 		image.setDevicePixelRatio(style::DevicePixelRatio());
-		const auto angle = _nftPhase * (0.65 + (i % 3) * 0.11)
-			+ (M_PI * 2. * i / count);
-		const auto radius = orbit
-			+ std::sin(_nftPhase * 1.7 + i) * geometry.width() * 0.02;
-		const auto pos = QPointF(
-			center.x() + std::cos(angle) * radius - side / 2.,
-			center.y() + std::sin(angle) * radius - side / 2.);
+		const auto angle = _nftPhase + (i * 1.5);
+		const auto radius = orbit + ((i & 1) ? geometry.width() * 0.16 : 0.);
+		const auto x = center.x() + std::cos(angle) * radius;
+		const auto y = center.y() + std::sin(angle) * radius;
+
 		p.setPen(Qt::NoPen);
-		p.setBrush(QColor(255, 255, 255, 48));
-		p.drawEllipse(QRectF(
-			pos.x() + side / 2. - bubbleSide / 2.,
-			pos.y() + side / 2. - bubbleSide / 2.,
-			bubbleSide,
-			bubbleSide));
-		p.setOpacity(0.92);
-		p.drawImage(QRectF(pos, QSizeF(side, side)), image);
+		p.setBrush(QColor(255, 255, 255, 0x30));
+		p.drawEllipse(QRectF(x - halo / 2., y - halo / 2., halo, halo));
+		p.setBrush(QColor(255, 255, 255, 0x66));
+		p.drawEllipse(QRectF(x - bubble / 2., y - bubble / 2., bubble, bubble));
+		p.setOpacity(0.98);
+		p.drawImage(QRectF(x - side / 2., y - side / 2., side, side), image);
+		p.setOpacity(1.);
 	}
-	p.setOpacity(1.);
 	p.restore();
+}
+
+void TopBar::mousePressEvent(QMouseEvent *e) {
+	if (!_nftStickers || _nftAddresses.empty()
+		|| e->button() != Qt::LeftButton
+		|| _nftGeometry.width() < 48) {
+		Ui::RpWidget::mousePressEvent(e);
+		return;
+	}
+	const auto center = rect::center(_nftGeometry);
+	const auto dx = e->pos().x() - center.x();
+	const auto dy = e->pos().y() - center.y();
+	const auto distance = std::sqrt(dx * dx + dy * dy);
+	const auto width = _nftGeometry.width();
+	if (distance < width * 0.16 || distance > width * 1.1) {
+		Ui::RpWidget::mousePressEvent(e);
+		return;
+	}
+	_nftDragging = true;
+	_nftDragCenter = center;
+	_nftLastAngle = std::atan2(dy, dx);
+	e->accept();
+}
+
+void TopBar::mouseMoveEvent(QMouseEvent *e) {
+	if (!_nftDragging) {
+		Ui::RpWidget::mouseMoveEvent(e);
+		return;
+	}
+	const auto angle = std::atan2(
+		e->pos().y() - _nftDragCenter.y(),
+		e->pos().x() - _nftDragCenter.x());
+	auto delta = angle - _nftLastAngle;
+	if (delta > M_PI) {
+		delta -= M_PI * 2.;
+	} else if (delta < -M_PI) {
+		delta += M_PI * 2.;
+	}
+	_nftPhase += delta;
+	_nftLastAngle = angle;
+	update();
+	e->accept();
+}
+
+void TopBar::mouseReleaseEvent(QMouseEvent *e) {
+	if (!_nftDragging) {
+		Ui::RpWidget::mouseReleaseEvent(e);
+		return;
+	}
+	_nftDragging = false;
+	update();
+	e->accept();
 }
 
 void TopBar::setupAnimatedPattern(const QRect &userpicGeometry) {

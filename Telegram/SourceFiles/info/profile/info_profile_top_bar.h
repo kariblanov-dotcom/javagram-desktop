@@ -87,6 +87,8 @@ namespace Ui::Menu {
 struct MenuCallback;
 } //namespace Ui::Menu
 
+class QMouseEvent;
+
 namespace Info::Profile {
 
 class Badge;
@@ -157,6 +159,9 @@ public:
 protected:
 	void resizeEvent(QResizeEvent *e) override;
 	void paintEvent(QPaintEvent *e) override;
+	void mousePressEvent(QMouseEvent *e) override;
+	void mouseMoveEvent(QMouseEvent *e) override;
+	void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
 	[[nodiscard]] bool clipTouchesRoundedCorners(const QRect &clip) const;
@@ -347,6 +352,10 @@ private:
 	std::vector<QString> _nftAddresses;
 	base::Timer _nftTimer;
 	float64 _nftPhase = 0.;
+	bool _nftDragging = false;
+	QPointF _nftDragCenter;
+	float64 _nftLastAngle = 0.;
+	QRect _nftGeometry;
 
 	base::unique_qptr<Ui::AbstractButton> _userpicButton;
 
