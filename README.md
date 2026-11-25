@@ -118,18 +118,6 @@ hand from the Releases tab.
 The server list and the download page are published separately from the client
 source.
 
-## Relation to OwpenGram
-
-The multi-server design follows the
-[OwpenGram](https://github.com/owpengram/owpengram-desktop-client) desktop
-client, which JavaGram is grateful to: it showed that one client can hold accounts
-on several servers without confusing them. JavaGram keeps that shape and fixes a
-number of rough edges — among them the separation of each account's data, a
-server list served from one address, and adding a server from its address alone.
-
-JavaGram is not affiliated with Telegram FZ-LLC or with OwpenGram. Telegram
-remains a separate project with its own clients and its own releases.
-
 ## Building
 
 The build instructions are the upstream ones, in the `docs` folder:
