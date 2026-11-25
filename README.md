@@ -10,8 +10,7 @@ community publishes, or to a machine you run yourself — each account bound to
 its own server, all in one app. Private by design, comfortable to use, and free
 from lock-in.
 
-> **Available for Windows, Linux and macOS (x64 and Apple Silicon).** Grab a build from
-> the [Releases](https://github.com/roon9e/javagram-desktop/releases) tab.
+> **Available for Windows, Linux and macOS (x64 and Apple Silicon).** Grab a build from the Releases tab.
 
 > Built on **MTProto API layer 232**, on top of Telegram Desktop **7.3.3**.
 
@@ -19,8 +18,7 @@ from lock-in.
 
 ## Download
 
-Builds live in the
-[Releases](https://github.com/roon9e/javagram-desktop/releases) tab.
+Builds live in the Releases tab.
 
 | Platform | File | What it is |
 |---|---|---|
@@ -117,11 +115,8 @@ disabled: its only reachable update feed would deliver the official Telegram
 package, which cannot run a non-Telegram server, so new builds are installed by
 hand from the Releases tab.
 
-The server list the client reads is at
-`https://roon9e.github.io/javagram-desktop/servers.json`.
-
-The download page is `https://roon9e.github.io/javagram-desktop/`, and it links to
-the latest release.
+The server list and the download page are published separately from the client
+source.
 
 ## Relation to OwpenGram
 
