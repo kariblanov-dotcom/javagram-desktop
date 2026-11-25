@@ -1,5 +1,7 @@
 # JavaGram Desktop
 
+![JavaGram](https://vjoy.cc/wp-content/uploads/2020/11/milye-anime-devushki-na-avu.jpg)
+
 **One client. Every server you trust.**
 
 JavaGram Desktop is a multi-server messenger built on the familiar Telegram
