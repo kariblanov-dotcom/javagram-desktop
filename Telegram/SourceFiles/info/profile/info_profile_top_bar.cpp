@@ -3324,8 +3324,6 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 	}
 	_nftGeometry = geometry;
 
-	// Force card collectible artwork to load and decode. The card fold is
-	// transparent: we only need its sticker images for the profile bubble.
 	auto fold = Wallet::CardFold();
 	fold.rest = geometry;
 	fold.quad = QPolygonF(QRectF(geometry));
@@ -3368,9 +3366,13 @@ void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
 		p.setBrush(QColor(255, 255, 255, 0x66));
 		p.drawEllipse(QRectF(x - bubble / 2., y - bubble / 2., bubble, bubble));
 		p.setOpacity(0.98);
-		p.drawImage(QRectF(x - side / 2., y - side / 2., side, side), image);
-		p.setOpacity(1.);
+		p.save();
+		p.translate(x, y);
+		p.rotate(_nftPhase + (i * 1.5));
+		p.drawImage(QRectF(0, 0, side, side), image);
+		p.restore();
 	}
+	p.setOpacity(1.);
 	p.restore();
 }
 
