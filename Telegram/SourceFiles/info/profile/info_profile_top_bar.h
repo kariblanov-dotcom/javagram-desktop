@@ -28,6 +28,10 @@ namespace Info::Profile {
 class TopicIconView;
 } // namespace Info::Profile
 
+namespace Wallet {
+class CardStickers;
+} // namespace Wallet
+
 namespace Lottie {
 class Animation;
 class MultiPlayer;
@@ -195,6 +199,8 @@ private:
 	void setupShowLastSeen(not_null<Window::SessionController*> controller);
 	void setupUniqueBadgeTooltip();
 	void hideBadgeTooltip();
+	void setupNftBubble();
+	void paintNftBubble(QPainter &p, const QRect &geometry);
 	void setupAnimatedPattern(const QRect &userpicGeometry = QRect());
 	void paintAnimatedPattern(
 		QPainter &p,
@@ -336,6 +342,11 @@ private:
 
 	std::vector<AnimatedPatternPoint> _animatedPoints;
 	QRect _lastUserpicRect;
+
+	std::unique_ptr<Wallet::CardStickers> _nftStickers;
+	std::vector<QString> _nftAddresses;
+	base::Timer _nftTimer;
+	float64 _nftPhase = 0.;
 
 	base::unique_qptr<Ui::AbstractButton> _userpicButton;
 

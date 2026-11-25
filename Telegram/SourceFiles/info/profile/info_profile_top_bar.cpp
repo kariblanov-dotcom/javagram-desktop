@@ -99,6 +99,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/fade_wrap.h"
 #include "window/themes/window_theme.h"
 #include "window/window_peer_menu.h"
+#include "wallet/wallet_card_stickers.h"
 #include "window/window_session_controller.h"
 #include "ui/toast/toast.h"
 #include "boxes/sticker_set_box.h"
@@ -554,6 +555,7 @@ TopBar::TopBar(
 	setupButtons(controller, descriptor.source);
 	setupSwipeBack(controller);
 	setupUserpicButton(controller);
+	setupNftBubble();
 	if (_hasActions) {
 		_peer->session().changes().peerFlagsValue(
 			_peer,
@@ -2936,6 +2938,7 @@ void TopBar::paintEvent(QPaintEvent *e) {
 
 	if (clipBounds.intersects(geometry)) {
 		paintUserpic(p, geometry);
+		paintNftBubble(p, geometry);
 		paintStoryOutline(p, geometry);
 	}
 
@@ -3279,6 +3282,89 @@ void TopBar::setupShowLastSeen(
 				::Settings::ShowPremium(controller, u"lastseen_hidden"_q);
 			}));
 	});
+}
+
+void TopBar::setupNftBubble() {
+	if (!_peer->isSelf()) {
+		return;
+	}
+	const auto user = _peer->asUser();
+	const auto card = user ? user->walletCard() : nullptr;
+	if (!card || card->stickers.empty()) {
+		return;
+	}
+	for (const auto &sticker : card->stickers) {
+		_nftAddresses.push_back(sticker.address);
+	}
+	_nftStickers = std::make_unique<Wallet::CardStickers>(
+		&_peer->session(),
+		Wallet::OwnCardStickersValue(&_peer->session()),
+		[weak = base::make_weak(this)] {
+			if (const auto strong = weak.get()) {
+				strong->update();
+			}
+		});
+	_nftTimer.setCallback([weak = base::make_weak(this)] {
+		if (const auto strong = weak.get()) {
+			if (!strong->_gifPausedChecker()) {
+				strong->_nftPhase += 0.04;
+			}
+			strong->update();
+		}
+	});
+	_nftTimer.callEach(40);
+}
+
+void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
+	if (!_nftStickers || _nftAddresses.empty() || geometry.width() < 48) {
+		return;
+	}
+
+	// Force card collectible artwork to load and decode. The card fold is
+	// transparent: we only need its sticker images for the profile bubble.
+	auto fold = Wallet::CardFold();
+	fold.rest = geometry;
+	fold.quad = QPolygonF(QRectF(geometry));
+	fold.transform = QTransform();
+	fold.opacity = 0.;
+	fold.valid = true;
+	auto dummy = QImage(1, 1, QImage::Format_ARGB32_Premultiplied);
+	auto probe = QPainter(&dummy);
+	_nftStickers->paint(probe, fold);
+	probe.end();
+
+	const auto count = std::min<size_t>(_nftAddresses.size(), 10);
+	const auto side = std::max(10, int(geometry.width() * 0.19));
+	const auto pixelSide = side * style::DevicePixelRatio();
+	const auto center = rect::center(geometry);
+	auto hq = PainterHighQualityEnabler(p);
+	p.save();
+	auto clip = QPainterPath();
+	clip.addEllipse(QRectF(geometry).adjusted(2., 2., -2., -2.));
+	p.setClipPath(clip);
+	for (size_t i = 0; i < count; ++i) {
+		auto image = _nftStickers->image(_nftAddresses[i]);
+		if (image.isNull()) {
+			continue;
+		}
+		image = image.scaled(
+			QSize(pixelSide, pixelSide),
+			Qt::KeepAspectRatio,
+			Qt::SmoothTransformation);
+		image.setDevicePixelRatio(style::DevicePixelRatio());
+		const auto angle = _nftPhase * (0.65 + (i % 3) * 0.11)
+			+ (M_PI * 2. * i / count);
+		const auto radius = geometry.width()
+			* (0.14 + (i % 2) * 0.07)
+			+ std::sin(_nftPhase * 1.7 + i) * geometry.width() * 0.025;
+		const auto pos = QPointF(
+			center.x() + std::cos(angle) * radius - side / 2.,
+			center.y() + std::sin(angle) * radius - side / 2.);
+		p.setOpacity(0.88);
+		p.drawImage(QRectF(pos, QSizeF(side, side)), image);
+	}
+	p.setOpacity(1.);
+	p.restore();
 }
 
 void TopBar::setupAnimatedPattern(const QRect &userpicGeometry) {
