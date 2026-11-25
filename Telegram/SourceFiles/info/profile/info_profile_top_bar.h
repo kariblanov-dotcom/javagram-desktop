@@ -16,6 +16,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/rp_widget.h"
 #include "ui/userpic_view.h"
 
+class QTimer;
+
 namespace Data {
 class ForumTopic;
 class DocumentMedia;
@@ -27,10 +29,6 @@ class SavedStarGiftId;
 namespace Info::Profile {
 class TopicIconView;
 } // namespace Info::Profile
-
-namespace Wallet {
-class CardStickers;
-} // namespace Wallet
 
 namespace Lottie {
 class Animation;
@@ -199,8 +197,9 @@ private:
 	void setupShowLastSeen(not_null<Window::SessionController*> controller);
 	void setupUniqueBadgeTooltip();
 	void hideBadgeTooltip();
-	void setupNftBubble();
-	void paintNftBubble(QPainter &p, const QRect &geometry);
+	void setupSnowfall();
+	void paintSnowfall(QPainter &p, const QRect &clip);
+	void tickSnowfall();
 	void setupAnimatedPattern(const QRect &userpicGeometry = QRect());
 	void paintAnimatedPattern(
 		QPainter &p,
@@ -268,6 +267,17 @@ private:
 	const style::InfoTopBar &_st;
 	const Source _source;
 	const bool _savedMessages = false;
+
+	struct Snowflake {
+		float x = 0.f;
+		float y = 0.f;
+		float radius = 1.f;
+		float speed = 0.f;
+		float drift = 0.f;
+		float phase = 0.f;
+	};
+	std::vector<Snowflake> _snowflakes;
+	std::unique_ptr<QTimer> _snowTimer;
 
 	std::unique_ptr<base::Timer> _badgeTooltipHide;
 	const std::unique_ptr<Badge> _botVerify;
@@ -342,9 +352,6 @@ private:
 
 	std::vector<AnimatedPatternPoint> _animatedPoints;
 	QRect _lastUserpicRect;
-
-	std::unique_ptr<Wallet::CardStickers> _nftStickers;
-	std::vector<QString> _nftAddresses;
 
 	base::unique_qptr<Ui::AbstractButton> _userpicButton;
 

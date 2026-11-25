@@ -43,7 +43,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/data_star_gift.h"
 #include "data/data_stories.h"
 #include "data/data_user.h"
-#include "data/data_user_wallet_card.h"
 #include "data/stickers/data_custom_emoji.h"
 #include "editor/photo_editor_common.h"
 #include "editor/photo_editor_layer_widget.h"
@@ -100,7 +99,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/fade_wrap.h"
 #include "window/themes/window_theme.h"
 #include "window/window_peer_menu.h"
-#include "wallet/wallet_card_stickers.h"
 #include "window/window_session_controller.h"
 #include "ui/toast/toast.h"
 #include "boxes/sticker_set_box.h"
@@ -110,8 +108,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "styles/style_layers.h"
 #include "styles/style_menu_icons.h"
 
+#include <QtCore/QTimer>
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
+
+#include <cmath>
 
 namespace Info::Profile {
 namespace {
@@ -556,7 +557,7 @@ TopBar::TopBar(
 	setupButtons(controller, descriptor.source);
 	setupSwipeBack(controller);
 	setupUserpicButton(controller);
-	setupNftBubble();
+	setupSnowfall();
 	if (_hasActions) {
 		_peer->session().changes().peerFlagsValue(
 			_peer,
@@ -2939,10 +2940,10 @@ void TopBar::paintEvent(QPaintEvent *e) {
 
 	if (clipBounds.intersects(geometry)) {
 		paintUserpic(p, geometry);
-		paintNftBubble(p, geometry);
 		paintStoryOutline(p, geometry);
 	}
 
+	paintSnowfall(p, clipBounds);
 	paintTabSubtitle(p);
 }
 
@@ -3283,106 +3284,6 @@ void TopBar::setupShowLastSeen(
 				::Settings::ShowPremium(controller, u"lastseen_hidden"_q);
 			}));
 	});
-}
-
-void TopBar::setupNftBubble() {
-	if (!_peer->isSelf()) {
-		return;
-	}
-	const auto user = _peer->asUser();
-	const auto card = user ? user->walletCard() : nullptr;
-	if (!card || card->stickers.empty()) {
-		return;
-	}
-	for (const auto &sticker : card->stickers) {
-		_nftAddresses.push_back(sticker.address);
-	}
-	_nftStickers = std::make_unique<Wallet::CardStickers>(
-		&_peer->session(),
-		Wallet::OwnCardStickersValue(&_peer->session()),
-		[weak = base::make_weak(this)] {
-			if (const auto strong = weak.get()) {
-				strong->update();
-			}
-		});
-}
-
-void TopBar::paintNftBubble(QPainter &p, const QRect &geometry) {
-	if (!_nftStickers || _nftAddresses.empty() || geometry.width() < 48) {
-		return;
-	}
-
-	// Force the pinned card stickers to load and decode.
-	auto fold = Wallet::CardFold();
-	fold.rest = geometry;
-	fold.quad = QPolygonF(QRectF(geometry));
-	fold.transform = QTransform();
-	fold.opacity = 0.;
-	fold.valid = true;
-	auto dummy = QImage(1, 1, QImage::Format_ARGB32_Premultiplied);
-	auto probe = QPainter(&dummy);
-	_nftStickers->paint(probe, fold);
-	probe.end();
-
-	const auto count = std::min<size_t>(_nftAddresses.size(), 6);
-	const auto bubbleWidth = std::max(34, int(geometry.width() * 0.52));
-	const auto bubbleHeight = std::max(24, int(bubbleWidth * 0.62));
-	const auto spacing = bubbleWidth + 6.;
-	const auto center = rect::center(geometry);
-	const auto startX = center.x() - spacing * (count - 1) / 2.;
-	const auto y = geometry.bottom() + bubbleHeight * 0.15;
-
-	auto hq = PainterHighQualityEnabler(p);
-	p.save();
-	p.setRenderHint(QPainter::Antialiasing);
-	for (size_t i = 0; i < count; ++i) {
-		auto image = _nftStickers->image(_nftAddresses[i]);
-		if (image.isNull()) {
-			continue;
-		}
-		const auto x = startX + spacing * i;
-		const QRectF bubble(
-			x - bubbleWidth / 2.,
-			y - bubbleHeight / 2.,
-			bubbleWidth,
-			bubbleHeight);
-
-		// One solid oval bubble for each pinned NFT.
-		p.setPen(Qt::NoPen);
-		p.setBrush(QColor(12, 14, 30, 255));
-		p.drawEllipse(bubble);
-		p.setBrush(Qt::NoBrush);
-		auto border = QPen(QColor(168, 139, 255, 230));
-		border.setWidthF(1.6);
-		p.setPen(border);
-		p.drawEllipse(bubble.adjusted(1., 1., -1., -1.));
-
-		auto borderGlow = QPen(QColor(56, 217, 245, 140));
-		borderGlow.setWidthF(1.);
-		p.setPen(borderGlow);
-		p.drawEllipse(bubble.adjusted(3., 3., -3., -3.));
-
-		const auto ratio = style::DevicePixelRatio();
-		auto imageSize = QSize(
-			std::max(4, int(bubbleWidth * 0.62 * ratio)),
-			std::max(4, int(bubbleHeight * 0.62 * ratio)));
-		image = image.scaled(
-			imageSize,
-			Qt::KeepAspectRatio,
-			Qt::SmoothTransformation);
-		image.setDevicePixelRatio(ratio);
-		const auto drawWidth = image.width() / ratio;
-		const auto drawHeight = image.height() / ratio;
-		p.setPen(Qt::NoPen);
-		p.drawImage(
-			QRectF(
-				x - drawWidth / 2.,
-				y - drawHeight / 2.,
-				drawWidth,
-				drawHeight),
-			image);
-	}
-	p.restore();
 }
 
 void TopBar::setupAnimatedPattern(const QRect &userpicGeometry) {
@@ -4094,6 +3995,72 @@ TopBarActionButtonStyle TopBar::mapActionStyle(
 				: std::make_optional(st::windowShadowFgFallback->c),
 		};
 	}
+}
+
+void TopBar::setupSnowfall() {
+	const auto random01 = [](int seed) {
+		const auto value = std::sin(float(seed) * 12.9898f) * 43758.5453f;
+		return value - std::floor(value);
+	};
+	_snowflakes.reserve(48);
+	for (int i = 0; i < 48; ++i) {
+		const auto base = i * 7 + 1;
+		_snowflakes.push_back({
+			.x = random01(base),
+			.y = random01(base + 1),
+			.radius = 1.f + random01(base + 2) * 2.2f,
+			.speed = 0.0012f + random01(base + 3) * 0.0028f,
+			.drift = 0.25f + random01(base + 4) * 0.75f,
+			.phase = random01(base + 5) * 6.28318f,
+		});
+	}
+	_snowTimer = std::make_unique<QTimer>(this);
+	_snowTimer->setInterval(40);
+	QObject::connect(_snowTimer.get(), &QTimer::timeout, [weak = base::make_weak(this)] {
+		if (const auto strong = weak.get()) {
+			strong->tickSnowfall();
+		}
+	});
+	_snowTimer->start();
+}
+
+void TopBar::tickSnowfall() {
+	for (auto &flake : _snowflakes) {
+		flake.y += flake.speed * 40.f;
+		flake.phase += 0.018f * flake.drift;
+		if (flake.y > 1.05f) {
+			flake.y = -0.05f;
+			flake.x = std::fmod(
+				std::abs(std::sin(flake.phase * 3.1f)) * 0.97f + 0.015f,
+				1.f);
+		}
+	}
+	update();
+}
+
+void TopBar::paintSnowfall(QPainter &p, const QRect &clip) {
+	if (_snowflakes.empty() || clip.isEmpty()) {
+		return;
+	}
+	p.save();
+	p.setClipRect(clip);
+	p.setPen(Qt::NoPen);
+	for (const auto &flake : _snowflakes) {
+		const auto sway = std::sin(flake.phase) * 10.f * flake.drift;
+		const auto x = clip.left() + flake.x * clip.width() + sway;
+		const auto y = clip.top() + flake.y * clip.height();
+		const auto alpha = int(std::clamp(
+				150.f - flake.y * 60.f,
+				70.f,
+				180.f));
+		p.setBrush(QColor(255, 255, 255, alpha));
+		p.drawEllipse(QRectF(
+			x - flake.radius,
+			y - flake.radius,
+			flake.radius * 2.f,
+			flake.radius * 2.f));
+	}
+	p.restore();
 }
 
 } // namespace Info::Profile
