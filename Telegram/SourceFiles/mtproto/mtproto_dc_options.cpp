@@ -162,7 +162,9 @@ void DcOptions::setBuiltInPublicKeys() {
 	readBuiltInPublicKeys();
 }
 
-void DcOptions::setPublicKeysFromPem(const QString &pem) {
+void DcOptions::setPublicKeysFromPem(
+		const QString &pem,
+		uint64 forcedFingerprint) {
 	WriteLocker lock(this);
 	const auto trimmed = pem.trimmed();
 	if (trimmed.isEmpty()) {
@@ -177,7 +179,9 @@ void DcOptions::setPublicKeysFromPem(const QString &pem) {
 		return;
 	}
 	_publicKeys.clear();
-	_publicKeys.emplace(parsed.fingerprint(), std::move(parsed));
+	_publicKeys.emplace(
+		forcedFingerprint ? forcedFingerprint : parsed.fingerprint(),
+		std::move(parsed));
 }
 
 void DcOptions::setOptionsLocked(bool locked) {

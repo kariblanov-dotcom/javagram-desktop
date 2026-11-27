@@ -93,7 +93,9 @@ public:
 	void setBuiltInPublicKeys();
 
 	// Replaces the trusted public keys with the one in the PEM.
-	void setPublicKeysFromPem(const QString &pem);
+	void setPublicKeysFromPem(
+		const QString &pem,
+		uint64 forcedFingerprint = 0);
 
 	[[nodiscard]] std::vector<DcId> configEnumDcIds() const;
 
