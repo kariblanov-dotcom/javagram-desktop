@@ -52,7 +52,7 @@ rpl::producer<TextWithEntities> Text2() {
 		lt_github_link,
 		rpl::single(tr::link(
 			"GitHub",
-			"https://github.com/roon9e/javagram-desktop")),
+			"https://stormgram.app")),
 		tr::marked);
 }
 

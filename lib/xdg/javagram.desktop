@@ -1,15 +1,15 @@
 [Desktop Entry]
-Name=JavaGram Desktop
+Name=StormGram Desktop
 Comment=New era of messaging
-TryExec=JavaGram
-Exec=JavaGram -- %U
-Icon=org.javagram.desktop
+TryExec=StormGram
+Exec=StormGram -- %U
+Icon=org.stormgram.desktop
 Terminal=false
-StartupWMClass=JavaGramDesktop
+StartupWMClass=StormGramDesktop
 Type=Application
 Categories=Chat;Network;InstantMessaging;Qt;
 MimeType=x-scheme-handler/tg;x-scheme-handler/tonsite;x-scheme-handler/ton;x-scheme-handler/srv;
-Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;javagram;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;stormgram;
 Actions=quit;
 DBusActivatable=true
 SingleMainWindow=true
@@ -17,6 +17,6 @@ X-GNOME-UsesNotifications=true
 X-GNOME-SingleWindow=true
 
 [Desktop Action quit]
-Exec=JavaGram -quit
-Name=Quit JavaGram
+Exec=StormGram -quit
+Name=Quit StormGram
 Icon=application-exit

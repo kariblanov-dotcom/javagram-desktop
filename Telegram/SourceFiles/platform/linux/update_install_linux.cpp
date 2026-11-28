@@ -640,7 +640,7 @@ const QString &PrivateDirectory::path() const {
 		}
 		const auto relative = prefix + name;
 		if (prefix.isEmpty()) {
-			const auto reserved = { "JavaGram", "Updater", "ready", "tdata" };
+			const auto reserved = { "StormGram", "Updater", "ready", "tdata" };
 			for (const auto word : reserved) {
 				if (AsciiLower(name) == AsciiLower(word) && name != word) {
 					return Fail(error, "A staged name aliases a reserved filename.");
@@ -654,7 +654,7 @@ const QString &PrivateDirectory::path() const {
 		const auto skipped = relative == "ready"
 			|| relative == "tdata"
 			|| relative.startsWith("tdata/");
-		const auto target = (relative == "JavaGram") ? executableName : relative;
+		const auto target = (relative == "StormGram") ? executableName : relative;
 		if (!skipped) {
 			const auto key = AsciiLower(target);
 			if (destinations.contains(key)) {
@@ -663,7 +663,7 @@ const QString &PrivateDirectory::path() const {
 			destinations.insert(key);
 		}
 		if (S_ISDIR(info.st_mode)) {
-			if (relative == "JavaGram" || relative == "Updater"
+			if (relative == "StormGram" || relative == "Updater"
 				|| relative == "ready") {
 				return Fail(error, "A required staged file is a directory.");
 			}
@@ -683,7 +683,7 @@ const QString &PrivateDirectory::path() const {
 		if (!TrustedFile(info)
 			|| info.st_size < 0
 			|| (mode != 0644 && mode != 0755)
-			|| ((relative == "JavaGram" || relative == "Updater")
+			|| ((relative == "StormGram" || relative == "Updater")
 				&& mode != 0755)) {
 			return Fail(error, "A staged file has an unsafe type, owner or mode.");
 		} else if (skipped) {
@@ -1011,7 +1011,7 @@ const QString &PrivateDirectory::path() const {
 	if (!staged) {
 		return ReportError(error);
 	}
-	for (const auto required : { "JavaGram", "Updater" }) {
+	for (const auto required : { "StormGram", "Updater" }) {
 		struct stat info = {};
 		if (fstatat(staged.get(), required, &info, AT_SYMLINK_NOFOLLOW)
 			|| !TrustedExecutable(info)) {

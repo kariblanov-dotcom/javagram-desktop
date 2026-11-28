@@ -1,16 +1,16 @@
-# JavaGram
+# StormGram
 
-![JavaGram](https://vjoy.cc/wp-content/uploads/2020/11/milye-anime-devushki-na-avu.jpg)
+![StormGram](https://vjoy.cc/wp-content/uploads/2020/11/milye-anime-devushki-na-avu.jpg)
 
 **One client. Every server you trust.**
 
-JavaGram Desktop is a multi-server messenger built on the familiar Telegram
+StormGram Desktop is a multi-server messenger built on the familiar Telegram
 Desktop experience. Sign in to the official Telegram network, to a server your
 community publishes, or to a machine you run yourself — each account bound to
 its own server, all in one app. Private by design, comfortable to use, and free
 from lock-in.
 
-> **Desktop for Windows x64 and Android APK.** Builds are published in Releases. Subscribe: https://t.me/javagramu
+> **Desktop for Windows x64 and Android APK.** Builds are published in Releases. Subscribe: https://t.me/stormgramu
 
 > Built on **MTProto API layer 232**, on top of Telegram Desktop **7.3.3**.
 
@@ -20,19 +20,19 @@ from lock-in.
 
 | Platform | File | What it is |
 |---|---|---|
-| Desktop Windows x64 | `JavaGram-windows-x64.exe` | JavaGram Desktop client, portable EXE. |
-| Android | `JavaGram-android.apk` | JavaGram Android APK. |
-| Android source | `JavaGram-APK-src.tar.gz` | Full Android smali/source tree. |
+| Desktop Windows x64 | `StormGram-windows-x64.exe` | StormGram Desktop client, portable EXE. |
+| Android | `StormGram-android.apk` | StormGram Android APK. |
+| Android source | `StormGram-APK-src.tar.gz` | Full Android smali/source tree. |
 | Checksums | `SHA256SUMS` | SHA256 for all published files. |
 
-All builds are in [Releases](https://github.com/kariblanov-dotcom/javagram-desktop/releases).
+All builds are in [Releases](https://github.com/kariblanov-dotcom/stormgram-desktop/releases).
 
-JavaGram is an unofficial project by the team behind https://t.me/javagramu.
+StormGram is an unofficial project by the team behind https://t.me/stormgramu.
 It is not affiliated with Telegram FZ-LLC.
 
 ## Try it without setting anything up
 
-JavaGram publishes a **public test server** in its server list, so it is already
+StormGram publishes a **public test server** in its server list, so it is already
 there when you sign in. On the server-selection screen, pick **Test server**
 instead of Telegram and sign in as usual.
 
@@ -53,10 +53,10 @@ in the same app and keep both.
 ## How multi-server works
 
 Every account is tied to a server, and you choose that server when you sign in.
-JavaGram comes with ready-to-use options:
+StormGram comes with ready-to-use options:
 
 - **Telegram** — the official network, with your normal Telegram account;
-- **Published servers** — the ones the JavaGram list names, fetched from a single address;
+- **Published servers** — the ones the StormGram list names, fetched from a single address;
 - **Custom** — any server you or your community runs.
 
 Several accounts on different servers stay cleanly separated — different
@@ -99,13 +99,13 @@ opening it pops the Add server box pre-filled with the address, and nothing else
 
 ## Versioning
 
-JavaGram Desktop tracks the upstream Telegram Desktop version it is built from.
+StormGram Desktop tracks the upstream Telegram Desktop version it is built from.
 The About box and the left menu read that version and nothing more — there is no
-separate JavaGram counter to keep in mind.
+separate StormGram counter to keep in mind.
 
 ## Releases
 
-Builds are published as GitHub releases. JavaGram ships with self-update
+Builds are published as GitHub releases. StormGram ships with self-update
 disabled: its only reachable update feed would deliver the official Telegram
 package, which cannot run a non-Telegram server, so new builds are installed by
 hand from the Releases tab.

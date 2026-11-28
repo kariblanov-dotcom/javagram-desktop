@@ -70,10 +70,10 @@ constexpr auto kCheckTimeout = 5000;
 [[nodiscard]] Server JavaGramServer() {
 	auto result = Server();
 	result.id = u"javagram"_q;
-	result.name = u"JavaGram"_q;
+	result.name = u"StormGram"_q;
 	result.host = u"31.77.16.194"_q;
 	result.port = 2398;
-	result.description = u"JavaGram"_q;
+	result.description = u"StormGram"_q;
 	result.rsaPublicKey = QString::fromUtf8("-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAxF//0M0+/5PzgdNagTX+J+dJgr75ZCTuiG8i4x7YwmJF+jiOGCjm\n7X7BLCaMc1+hOZYDL3+Gvle/AKykW1qouaCJMVx/H+2l8LFXLelZ2PLawTb8A7Bl\nTqWzL3db5BugMNWziL9TuhR8In1bwKY07QVpR9in5zjAsAGLBk+mGt0DnVyMf1Xo\np2lLCFNmm0F4ykcAeaLCCIPbGWddliLY8xEEhI4GO2l1U3kZMwIOdOnAGJFtgUAo\nTe+FHR6F1s9adCVZB1teL/hf9R+WmekJwygVz0MYEH7y6U49T45+/W7OF6X6g0W0\nj1uSSrsY4qN7twxbTad9zdGZ7ys+9v+PuQIDAQAB\n-----END RSA PUBLIC KEY-----\n");
 	result.logoPath = u":/gui/art/logo_256.png"_q;
 	result.multiDc = false;
@@ -208,12 +208,12 @@ void WriteCustomServers(const std::vector<Server> &servers) {
 	}
 	QSaveFile file(CustomServersFile());
 	if (!file.open(QIODevice::WriteOnly)) {
-		LOG(("JavaGram Error: could not write the server list."));
+		LOG(("StormGram Error: could not write the server list."));
 		return;
 	}
 	file.write(QJsonDocument(array).toJson(QJsonDocument::Indented));
 	if (!file.commit()) {
-		LOG(("JavaGram Error: could not write the server list."));
+		LOG(("StormGram Error: could not write the server list."));
 	}
 }
 
@@ -291,7 +291,7 @@ void EnsureServerLogo(const Server &server) {
 		if (error != QNetworkReply::NoError
 			|| data.isEmpty()
 			|| data.size() > kMaxLogoResponseSize) {
-			LOG(("JavaGram Error: could not read the logo from \"%1\".")
+			LOG(("StormGram Error: could not read the logo from \"%1\".")
 				.arg(logoPath));
 			return;
 		}
@@ -371,7 +371,7 @@ void RequestRemoteList(
 			&& ApplyRemoteList(state, data)) {
 			return;
 		}
-		LOG(("JavaGram Error: could not read the server list from \"%1\": %2.")
+		LOG(("StormGram Error: could not read the server list from \"%1\": %2.")
 			.arg(url, errorText));
 		if (!fallback.isEmpty()) {
 			RequestRemoteList(state, fallback, QString());
@@ -516,7 +516,7 @@ void ApplyServerToDcOptions(MTP::DcOptions &options, const Server &server) {
 		if (!server.isTelegram) {
 			// The handshake cannot complete without the key of a server
 			// that is not the official network.
-			LOG(("JavaGram Error: the server %1 has no public RSA key.")
+			LOG(("StormGram Error: the server %1 has no public RSA key.")
 				.arg(server.endpoint()));
 		}
 	} else {

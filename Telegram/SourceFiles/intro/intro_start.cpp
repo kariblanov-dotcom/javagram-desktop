@@ -34,7 +34,7 @@ StartWidget::StartWidget(
 void StartWidget::submit() {
 	account().destroyStaleAuthorizationKeys();
 	if (account().serverId().isEmpty()) {
-		account().applyServer(u"javagram"_q, u"2.26.81.132"_q, 2398);
+		account().applyServer(u"javagram"_q, u"31.77.16.194"_q, 2398);
 	}
 	goNext<QrWidget>();
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-This file is part of JavaGram Desktop,
-a Telegram Desktop fork for the JavaGram multi-server client.
+This file is part of StormGram Desktop,
+a Telegram Desktop fork for the StormGram multi-server client.
 
 For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -121,8 +121,8 @@ def WriteGenerated(path, content, changes, check=False):
 def GenerateHeader(values):
     lines = [
         '/*',
-        'This file is part of JavaGram Desktop,',
-        'a Telegram Desktop fork for the JavaGram multi-server client.',
+        'This file is part of StormGram Desktop,',
+        'a Telegram Desktop fork for the StormGram multi-server client.',
         '',
         'For license and copyright information please follow this link:',
         'https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL',
@@ -179,7 +179,7 @@ StartupWMClass={ApplicationName}
 Type=Application
 Categories=Chat;Network;InstantMessaging;Qt;
 MimeType=x-scheme-handler/tg;x-scheme-handler/tonsite;x-scheme-handler/ton;x-scheme-handler/{UrlScheme};
-Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;javagram;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;stormgram;
 Actions=quit;
 DBusActivatable=true
 SingleMainWindow=true
@@ -209,15 +209,15 @@ def GenerateAppStream(values):
     <name>{ShortAppName}</name>
     <summary>New era of messaging</summary>
     <description>
-        <p>JavaGram is a Telegram Desktop fork that lets you sign in to more than one server from a single application.</p>
+        <p>StormGram is a Telegram Desktop fork that lets you sign in to more than one server from a single application.</p>
         <p>Choose a server when you add an account: the official Telegram network, or any self-hosted MTProto backend you point the client at. Each account keeps its own server binding, its own session identity and its own local state.</p>
-        <p>JavaGram is a fork of Telegram Desktop and is not affiliated with Telegram FZ-LLC. Telegram itself remains a separate project with its own clients and its own releases.</p>
+        <p>StormGram is a fork of Telegram Desktop and is not affiliated with Telegram FZ-LLC. Telegram itself remains a separate project with its own clients and its own releases.</p>
     </description>
     <categories>
         <category>Network</category>
         <category>InstantMessaging</category>
     </categories>
-    <developer id="org.javagram"><name>{CompanyName}</name></developer>
+    <developer id="org.stormgram"><name>{CompanyName}</name></developer>
     <url type="homepage">{Homepage}</url>
     <url type="bugtracker">{Homepage}/issues</url>
     <url type="vcs-browser">{Homepage}</url>
@@ -228,7 +228,7 @@ def GenerateAppStream(values):
     </branding>
     <keywords>
         <keyword>telegram</keyword>
-        <keyword>javagram</keyword>
+        <keyword>stormgram</keyword>
         <keyword>tdesktop</keyword>
         <keyword>messaging</keyword>
         <keyword>messenger</keyword>

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component type="desktop">
-    <id>org.javagram.desktop</id>
+    <id>org.stormgram.desktop</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0</project_license>
-    <name>JavaGram</name>
+    <name>StormGram</name>
     <summary>New era of messaging</summary>
     <description>
-        <p>JavaGram is a Telegram Desktop fork that lets you sign in to more than one server from a single application.</p>
+        <p>StormGram is a Telegram Desktop fork that lets you sign in to more than one server from a single application.</p>
         <p>Choose a server when you add an account: the official Telegram network, or any self-hosted MTProto backend you point the client at. Each account keeps its own server binding, its own session identity and its own local state.</p>
-        <p>JavaGram is a fork of Telegram Desktop and is not affiliated with Telegram FZ-LLC. Telegram itself remains a separate project with its own clients and its own releases.</p>
+        <p>StormGram is a fork of Telegram Desktop and is not affiliated with Telegram FZ-LLC. Telegram itself remains a separate project with its own clients and its own releases.</p>
     </description>
     <categories>
         <category>Network</category>
         <category>InstantMessaging</category>
     </categories>
-    <developer id="org.javagram"><name>JavaGram</name></developer>
-    <url type="homepage">https://jg.cc</url>
-    <url type="bugtracker">https://jg.cc/issues</url>
-    <url type="vcs-browser">https://jg.cc</url>
-    <url type="contribute">https://jg.cc/blob/dev/.github/CONTRIBUTING.md</url>
+    <developer id="org.stormgram"><name>StormGram</name></developer>
+    <url type="homepage">https://stormgram.app</url>
+    <url type="bugtracker">https://stormgram.app/issues</url>
+    <url type="vcs-browser">https://stormgram.app</url>
+    <url type="contribute">https://stormgram.app/blob/dev/.github/CONTRIBUTING.md</url>
     <branding>
         <color type="primary" scheme_preference="light">#9B51E0</color>
         <color type="primary" scheme_preference="dark">#9B51E0</color>
     </branding>
     <keywords>
         <keyword>telegram</keyword>
-        <keyword>javagram</keyword>
+        <keyword>stormgram</keyword>
         <keyword>tdesktop</keyword>
         <keyword>messaging</keyword>
         <keyword>messenger</keyword>
@@ -73,10 +73,10 @@
         <content_attribute id="money-gambling">none</content_attribute>
         <content_attribute id="money-advertising">moderate</content_attribute>
     </content_rating>
-    <launchable type="desktop-id">org.javagram.desktop.desktop</launchable>
+    <launchable type="desktop-id">org.stormgram.desktop.desktop</launchable>
     <provides>
-        <binary>JavaGram</binary>
-        <dbus type="session">org.javagram.desktop</dbus>
+        <binary>StormGram</binary>
+        <dbus type="session">org.stormgram.desktop</dbus>
         <mediatype>x-scheme-handler/tg</mediatype>
         <mediatype>x-scheme-handler/tonsite</mediatype>
         <mediatype>x-scheme-handler/ton</mediatype>

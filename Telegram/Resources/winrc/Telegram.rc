@@ -60,11 +60,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "JavaGram"
-            VALUE "FileDescription", "JavaGram Desktop"
+            VALUE "CompanyName", "StormGram"
+            VALUE "FileDescription", "StormGram Desktop"
             VALUE "FileVersion", "7.4.4.0"
             VALUE "LegalCopyright", "Copyright (C) 2014-2026"
-            VALUE "ProductName", "JavaGram Desktop"
+            VALUE "ProductName", "StormGram Desktop"
             VALUE "ProductVersion", "7.4.4.0"
         END
     END

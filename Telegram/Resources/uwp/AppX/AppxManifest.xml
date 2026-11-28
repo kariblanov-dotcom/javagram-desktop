@@ -7,14 +7,14 @@
    xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
    IgnorableNamespaces="uap uap2 uap3 desktop rescap">
-  <Identity Name="JavaGram.JavaGramDesktop"
+  <Identity Name="StormGram.StormGramDesktop"
     ProcessorArchitecture="ARCHITECTURE"
     Publisher="CN=536BC709-8EE1-4478-AF22-F0F0F26FF64A"
     Version="7.4.4.0" />
   <Properties>
-    <DisplayName>JavaGram Desktop</DisplayName>
-    <PublisherDisplayName>JavaGram</PublisherDisplayName>
-    <Description>JavaGram Desktop messenger</Description>
+    <DisplayName>StormGram Desktop</DisplayName>
+    <PublisherDisplayName>StormGram</PublisherDisplayName>
+    <Description>StormGram Desktop messenger</Description>
     <Logo>Assets\logo\logo.png</Logo>
   </Properties>
   <Resources>
@@ -27,10 +27,10 @@
     <rescap:Capability Name="runFullTrust"/>
   </Capabilities>
   <Applications>
-    <Application Id="Telegram.TelegramDesktop.Store" Executable="JavaGram.exe" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="StormGram.StormGramDesktop.Store" Executable="StormGram.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
        BackgroundColor="#9B51E0"
-       DisplayName="JavaGram Desktop"
+       DisplayName="StormGram Desktop"
        Square150x150Logo="Assets\logo150\logo150.png"
        Square44x44Logo="Assets\logo44\logo44.png"
        Description="Telegram Desktop official messenger" />
@@ -49,7 +49,7 @@
           Executable="StartupTask.exe"
           EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask
-            TaskId="JavaGramStartupTask"
+            TaskId="StormGramStartupTask"
             Enabled="false"
             DisplayName="Telegram Desktop" />
         </desktop:Extension>

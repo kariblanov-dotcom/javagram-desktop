@@ -1,10 +1,10 @@
-#define MyAppShortName "JavaGram"
-#define MyAppName "JavaGram Desktop"
-#define MyAppPublisher "JavaGram"
-#define MyAppURL "https://jg.cc"
-#define MyAppExeName "JavaGram.exe"
+#define MyAppShortName "StormGram"
+#define MyAppName "StormGram Desktop"
+#define MyAppPublisher "StormGram"
+#define MyAppURL "https://stormgram.app"
+#define MyAppExeName "StormGram.exe"
 #define MyAppId "931A266D-A4AF-4DE1-A59A-AAC977626CA3"
-#define MyOutputBasePrefix "javagram-setup"
+#define MyOutputBasePrefix "stormgram-setup"
 #define CurrentYear GetDateTimeString('yyyy','','')
 
 [Setup]

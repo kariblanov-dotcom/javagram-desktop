@@ -98,6 +98,6 @@
   </qresource>
   <qresource prefix="/misc">
     <file alias="default_shortcuts-custom.json">../../default_shortcuts-custom.json</file>
-    <file alias="org.javagram.desktop.desktop">../../../../lib/xdg/javagram.desktop</file>
+    <file alias="org.stormgram.desktop.desktop">../../../../lib/xdg/javagram.desktop</file>
   </qresource>
 </RCC>
