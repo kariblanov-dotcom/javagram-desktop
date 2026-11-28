@@ -329,9 +329,9 @@ jobs:
         if: (env.UPLOAD_ARTIFACT == 'true') || (github.ref == 'refs/heads/nightly')
         run: |
           set OUT=%TBUILD%\%REPO_NAME%\out\Release
-          if not exist %OUT%\JavaGram.exe set OUT=%TBUILD%\%REPO_NAME%\out
+          if not exist %OUT%\StormGram.exe set OUT=%TBUILD%\%REPO_NAME%\out
           mkdir artifact
-          move %OUT%\JavaGram.exe artifact/
+          move %OUT%\StormGram.exe artifact/
           move %OUT%\Updater.exe artifact/
       - uses: actions/upload-artifact@v7
         name: Upload artifact.
